@@ -7,6 +7,21 @@
  *
  * Copyright (C) 2015 Dan Allen
  */
+
+/* Very very custom styles */
+#aboutme .logo img {
+  float: right;
+  clear: right;
+  margin-bottom: 35px;
+  background-color: white;
+  padding: 10px;
+}
+
+#aboutme pre {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+} 
+
+/* Generic styles */
 body {
   background-color: #2b2b2b;
 }
@@ -57,7 +72,11 @@ body {
 }
 
 .reveal h1 + p {
+<<<<<<< Updated upstream
   text-align: right;
+=======
+  text-align: left;
+>>>>>>> Stashed changes
 }
 
 .reveal h1 strong {
@@ -499,3 +518,13 @@ section.topic {
   background-color: #b81652;
 }
 */
+
+footer {
+    position: fixed;
+    bottom: 1%;
+    right: 15%;    
+}
+
+footer span {
+  font-size: 0.35em !important;
+}
