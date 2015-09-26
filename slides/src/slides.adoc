@@ -1,0 +1,49 @@
+= What is *code*?
+Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
+:title-slide-background-image: scriptorium.jpg
+:title-slide-background-size: cover
+:icons: font
+:imagesdir: images
+:revealjs_theme: poang
+:revealjs_transition: fade
+:revealjs_progress: false
+:revealjs_history: true
+:revealjs_controls: false
+:revealjs_customtheme: css/poang.css
+
+== Introduction
+
+[%step]
+* This is a user manual for an example project.
+* This project does something.
+* We just haven't decided what that is yet.
+
+
+[NOTE.speaker]
+--
+First notes
+--
+
+[data-background-image=images/stuck.jpg, data-background-size=cover]
+== !
+
+
+[NOTE.speaker]
+--
+Some other notes
+--
+
+[%notitle]
+== aaaa
+
+[.emblems]
+icon:keyboard-o[]:: edit
+icon:eye[]:: read
+icon:git[]:: version
+icon:share-square-o[]:: share
+icon:flask[]:: convert
+
+[NOTE.speaker]
+--
+Actually things aren't that bad
+--

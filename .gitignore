@@ -1,0 +1,9 @@
+*.lock
+*.pdf
+*.html
+!slides*.html
+*~
+diag-*
+build/
+.gradle
+tmp
