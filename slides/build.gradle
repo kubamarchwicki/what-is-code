@@ -38,6 +38,11 @@ task download << {
 	}
 }
 
+download {
+	description "Download extra revealjs resources"
+	outputs.dir templateDir
+	outputs.dir revealjsDir
+}
 
 asciidoctor {
 	dependsOn download	
