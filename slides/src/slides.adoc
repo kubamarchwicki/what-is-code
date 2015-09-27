@@ -1,6 +1,6 @@
-= What is *code*?
+= What is *_code_*?
 Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
-:title-slide-background-image: scriptorium.jpg
+:title-slide-background-image: code-example.jpg
 :title-slide-background-size: cover
 :icons: font
 :imagesdir: images
@@ -10,40 +10,174 @@ Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
 :revealjs_history: true
 :revealjs_controls: false
 :revealjs_customtheme: css/poang.css
+:revealjs_width: 1280
+:revealjs_height: 720
 
-== Introduction
+== Things to cover
 
 [%step]
-* This is a user manual for an example project.
-* This project does something.
-* We just haven't decided what that is yet.
-
-
-[NOTE.speaker]
---
-First notes
---
-
-[data-background-image=images/stuck.jpg, data-background-size=cover]
-== !
-
+* What do we actually do?
+* Is code everything?
+* What about business?
+* What about testers?
+* What about operations?
+* *This is not a _softskills_ talk*
 
 [NOTE.speaker]
 --
-Some other notes
+* Deeper dive
+** Documentation. Requirements, architecture / design documents, checklists, specifications
+** Test data. Consumer driven contracts
+** Operations. Infrastructure. Configurations. Database changes and migrations (sql / nosql).
+* I'll tackle 3 areas: documentation, infrastructure, test data
+** Tools and why people are resistance to it?
 --
 
-[%notitle]
-== aaaa
+[#aboutme%notitle]
+== Who am I?
 
-[.emblems]
-icon:keyboard-o[]:: edit
-icon:eye[]:: read
-icon:git[]:: version
-icon:share-square-o[]:: share
-icon:flask[]:: convert
+image::logo-ydp.png[width=190, role="logo"]
+image::logo-bns.png[width=190, role="logo"]
+image::logo-symentis.png[width=190, role="logo"]
+
+....
+* Young Digital Planet (YDP)
+  A Digital Publishing in Education
+
+* I'm Chief Almighty Architect. Kind of
+
+* Trainer, consultant
+  https://bnsit.pl
+  https://symentis.pl
+
+* 10+ years in IT
+* Past 3 years in management
+** Gradually recovering
+
+* I don't claim these ideas perfect
+** They were good enough in context
+** I'm happy to discuss it and ritualy dissent them
+....
 
 [NOTE.speaker]
 --
-Actually things aren't that bad
+Who am I?
+
+YDP - Education Publisher
 --
+
+[data-background="#eee"]
+== What are we doing?
+
+[data-background-image=images/i-have-no-clue.gif, data-background-size=cover, options="notitle"]
+== I have no idea what I'm doing
+
+
+////
+Start with code - but there are other things in the project
+* bunch of documentation (Didct) + changes (bring more copies)
+* Content model (when tracking changes went wrong)
+* GM CR migrations
+* waiting for another developer to do their migration
+* operations saying: I know you've written docs, but we don't read it (we just want you to write them)
+
+You start understanding something went wrong
+////
+
+[data-background="#eee"]
+== Documentation
+
+////
+* No diffs, changes not traceable
+* totally outside developers workflow - developers are the biggers stakeholders
+* versioning (in manual way), no blame and "lub czasopisma" not traceable
+** photo z "content management"
+////
+
+== Who are docs written for?
+
+* Products Owners
+* Projects Managers / Team Leads
+* *Developers*
+* Analysts (?)
+
+[NOTE.speaker]
+--
+Documentation stakeholders & concerns
+* Products Owner:  with how analysis maps to BR / FR. How tests covers BR / FR
+* Architect: analysis changes and traceability (accessibility / readability)
+* Project Manager / Team Leader: getting new people on board, how comprehensive are docs for the teams
+* Developer: availability and comprehensiveness of documentation. Number of changes needed to be adjusted (number of required modifications)
+--
+
+////
+Typical documentations silos
+* dokumentacja_ydp.pdf
+* http://philcalcado.com/2015/09/08/how_we_ended_up_with_microservices.html
+////
+
+[data-background="#eee"]
+== Infrastructure
+
+////
+* handcrafted == error prone. 
+** roll forward, hands off policy ==> job security. they gonna fire me
+* bottle necks
+** SVN do wdrożeń. too busy cutting the trees to sharpen an axe
+** 100 maszyn, brak powtarzalności
+////
+
+[data-background="#eee"]
+== Test data
+
+////
+* flyway migration tests (with docker, db instances)
+* CDC test data
+////
+
+[data-background="#eee"]
+== Puenta?
+
+[data-background-image=images/puenta-bubbles.gif, data-background-size=cover]
+== OMG! We got tools!
+
+[NOTE.speaker]
+--
+* There are tools, but it's not about tools. Shift is the change of organisation
+--
+
+[data-background-image=images/puenta-crunch-walls.gif, data-background-size=cover]
+== Crunch some walls!
+
+[NOTE.speaker]
+--
+* Crunch some walls
+** Architecture are principles. Design is code
+** You code it, you deploy
+** And get rid of the Enterprise Architect (Sparx one). It's neither enterprise nor architects - it's just a tool
+--
+
+[data-background-image=images/puenta-shigeru.gif, data-background-size=cover]
+== Change the organisation?
+
+[NOTE.speaker]
+--
+* Organisational change is an evolution. 
+** I've shown some tools - an easy part
+** Now the hard part - changing how people work
+--
+
+[data-background-image=images/slowclap.gif, data-background-size=cover]
+== Questions?
+
+== Links & Goodies
+
+----
+http://speakerdeck.com/kubamarchwicki/what-is-code
+
+Follow me on twitter
+  @kubem
+
+This presentation was made with AsciiDoc
+  https://github.com/kubamarchwicki/what-is-code
+----
