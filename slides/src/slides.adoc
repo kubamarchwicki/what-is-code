@@ -13,6 +13,9 @@ Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
 :revealjs_width: 1280
 :revealjs_height: 720
 
+[data-background-image=images/what-is-love.gif, data-background-size=cover]
+== What is *_code_*?
+
 == Things to cover
 
 [%step]
