@@ -1,5 +1,6 @@
 = Spring Boot showcase
-:sourcedir: src/main/java
+:basedir: ../..
+:sourcedir: {basedir}/src/main/java
 :source-highlighter: coderay
 
 This are steps to guide through a spring-boot application showcase. 
@@ -9,19 +10,19 @@ This are steps to guide through a spring-boot application showcase.
 [source, xml]
 .dependencyManagement
 ----
-include::pom.xml[tags=depMgmt, indent=0]
+include::{basedir}/pom.xml[tags=depMgmt, indent=0]
 ----
 
 [source, xml]
 .dependency
 ----
-include::pom.xml[lines="35,36", indent=0]
+include::{basedir}/pom.xml[lines="35,36", indent=0]
 ----
 
 [source, xml]
 .build / plugins
 ----
-include::pom.xml[lines="76,77", indent=0]
+include::{basedir}/pom.xml[lines="76,77", indent=0]
 ----
 
 [source,java]
@@ -36,7 +37,7 @@ include::{sourcedir}/com/example/App.java[lines="17..41", indent=0]
 
 [source, xml]
 ----
-include::pom.xml[lines="39..41,43", indent=0]
+include::{basedir}/pom.xml[lines="39..41,43", indent=0]
 ----
 
 <<<
@@ -136,7 +137,7 @@ public interface TransactionLogRepository extends JpaRepository<TranslationLog, 
 [source, yml]
 .application.yml
 ----
-include::src/main/resources/application.yml[]
+include::{basedir}/src/main/resources/application.yml[]
 ----
 
 <<<
