@@ -1,0 +1,156 @@
+= Spring Boot showcase
+:sourcedir: src/main/java
+:source-highlighter: coderay
+
+This are steps to guide through a spring-boot application showcase. 
+
+== RestController
+
+[source, xml]
+.dependencyManagement
+----
+include::pom.xml[tags=depMgmt, indent=0]
+----
+
+[source, xml]
+.dependency
+----
+include::pom.xml[lines="35,36", indent=0]
+----
+
+[source, xml]
+.build / plugins
+----
+include::pom.xml[lines="76,77", indent=0]
+----
+
+[source,java]
+.App.java
+----
+include::{sourcedir}/com/example/App.java[lines="17..41", indent=0]
+----
+
+<<<
+
+== Adding actuator
+
+[source, xml]
+----
+include::pom.xml[lines="39..41,43", indent=0]
+----
+
+<<<
+
+== spring-data-jpa
+
+Transaction Log and log endpoint
+
+[source, xml]
+.dependencies
+----
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.hsqldb</groupId>
+    <artifactId>hsqldb</artifactId>
+    <scope>runtime</scope>
+</dependency>
+----
+
+[source, java]
+.TransactionLog.java
+----
+include::{sourcedir}/com/example/audit/TranslationLog.java[lines="8..15", indent=0]
+
+	//...
+}
+----
+
+[source,java]
+.TransactionLogRepository.java
+----
+include::{sourcedir}/com/example/audit/TransactionLogRepository.java[lines="8..-1", indent=0]
+----
+
+<<<
+
+== REST & Spring Data REST 
+
+[source, java]
+.App.java
+----
+@Autowired
+TransactionLogRepository repository;
+
+@RequestMapping("/log")
+public List<TranslationLog> log() {
+ return repository.findAll();
+}
+
+@RequestMapping("/{word}")
+public List<DictionaryWord> getTranslations(@PathVariable String word) throws IOException {
+ List<DictionaryWord> translations = dict.getTranslations(word);
+
+ TranslationLog log = new TranslationLog();
+ log.setPolishWord(word);
+ log.setCnt(translations.size());
+ log.setTimestamp(new Date());
+ repository.save(log);
+
+ return translations;
+}
+----
+
+[source, xml]
+.dependencies
+----
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-data-rest</artifactId>
+</dependency>
+----
+
+[source, java]
+----
+@RepositoryRestResource(collectionResourceRel = "logs", path = "logs")
+public interface TransactionLogRepository extends JpaRepository<TranslationLog, Long> {
+
+}
+----
+
+<<<
+
+== MySQL support
+
+[source, xml]
+.dependencies
+----
+<groupId>mysql</groupId>
+<artifactId>mysql-connector-java</artifactId>
+<version>5.1.31</version>
+<scope>runtime</scope>
+----
+
+[source, yml]
+.application.yml
+----
+include::src/main/resources/application.yml[]
+----
+
+<<<
+
+== Aspect
+
+[source,xml]
+----
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-aop</artifactId>
+----
+
+[source,java]
+.TranslationMonitor.java
+----
+include::{sourcedir}/com/example/audit/TranslationMonitor.java[lines="13..-1", indent=0]
+----
