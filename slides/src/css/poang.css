@@ -493,6 +493,10 @@ td.valign-top {
   text-align: center;
 }
 
+.reveal .has-light-background .title {
+  color: #2B2B2B;
+}
+
 .reveal .exampleblock {
   display: inline-block;
   border-radius: 1ex;

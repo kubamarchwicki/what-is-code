@@ -75,29 +75,53 @@ YDP - Education Publisher
 [data-background-image=images/i-have-no-clue.gif, data-background-size=cover, options="notitle"]
 == I have no idea what I'm doing
 
-
-////
+[NOTE.speaker]
+--
 Start with code - but there are other things in the project
-* bunch of documentation (Didct) + changes (bring more copies)
+
+* bunch of documentation (Didactus) + changes (bring more copies)
 * Content model (when tracking changes went wrong)
-* GM CR migrations
+* GM CR migrations. I was DevOps before it was trendy
 * waiting for another developer to do their migration
 * operations saying: I know you've written docs, but we don't read it (we just want you to write them)
+* testert driven development
 
 You start understanding something went wrong
-////
+--
 
 [data-background="#eee"]
-== Documentation
+== Let's talk documentation
 
-////
-* No diffs, changes not traceable
-* totally outside developers workflow - developers are the biggers stakeholders
-* versioning (in manual way), no blame and "lub czasopisma" not traceable
-** photo z "content management"
-////
+== Tooling
 
-== Who are docs written for?
+[%step]
+* Excel
+* Enterprise architect
+* Confluence
+* Swagger (or other generated HTMLs)
+
+[data-background-image=images/documentation-flow.png, data-background-size=cover, options="notitle"]
+== How your documentation flow might look like
+
+[NOTE.speaker]
+--
+An example information flow might look like - this is how it looks in one of a projects I participated in
+--
+
+[data-background="#fff", options="notitle"]
+== Soundcloud documents
+
+.link:http://philcalcado.com/2015/09/08/how_we_ended_up_with_microservices.html[Soundcloud documentation]
+image::documentation-soundcloud.png[caption="Example "]
+
+[NOTE.speaker]
+--
+An example what is used within Soundcloud. 
+
+Question is - who is the dcumentation for
+--
+
+== Who are docs for?
 
 * Products Owners
 * Projects Managers / Team Leads
@@ -107,20 +131,57 @@ You start understanding something went wrong
 [NOTE.speaker]
 --
 Documentation stakeholders & concerns
+
 * Products Owner:  with how analysis maps to BR / FR. How tests covers BR / FR
 * Architect: analysis changes and traceability (accessibility / readability)
 * Project Manager / Team Leader: getting new people on board, how comprehensive are docs for the teams
 * Developer: availability and comprehensiveness of documentation. Number of changes needed to be adjusted (number of required modifications)
 --
 
+== So what's wrong?
+
 ////
-Typical documentations silos
-* dokumentacja_ydp.pdf
-* http://philcalcado.com/2015/09/08/how_we_ended_up_with_microservices.html
+* No diffs, changes not traceable
+* totally outside developers workflow - developers are the biggers stakeholders
+* versioning (in manual way), no blame and "lub czasopisma" not traceable
+** photo z "content management" - z systemami gdzie rzeczy leżą informacje
+////
+
+[data-background="#fff"]
+== IEEE 1471
+
+.Just building a wrong thing?
+image::ieee1471.jpg[caption=""]
+
+////
+* what can we do about it?
+* architecture vs design. 
+** who here is having a role of solution architect?
+** and what you actually do? design a system?
+* architecture are principles (our API is self documenting), policies (we favour MySQL over Oracle), contexts (application landscape) - at the level of business requirements.
+** they usually should not change unless project's business objectives change
+** if they change - we are building a different system / product
+* everything else is a design, it's an incremental process of building a solution
+** you hardly ever know upfront the complete Container View from the C4 model
+** what you design is heavily impacted by the feedback from the development team
+** but still - we are keeping it in a different silo
+////
+
+////
+* can we store the docs in git?
+* have we make it approachable by an average developer?
+* Try AsciiDoctor
+** Write structured documents (not like Word - which can be structured but usually isn't)
+** Include diagrams, flows - code snippets- and get a PDF within the buid process
+////
+
+////
+project folder - springboot example
+asciidoctor folder - manual
 ////
 
 [data-background="#eee"]
-== Infrastructure
+== Let's talk operations
 
 ////
 * handcrafted == error prone. 
@@ -128,13 +189,27 @@ Typical documentations silos
 * bottle necks
 ** SVN do wdrożeń. too busy cutting the trees to sharpen an axe
 ** 100 maszyn, brak powtarzalności
+** Maciejewski - operations w facebooku
+////
+
+////
+* We can try hipster - let's go Dockers.
+** Docker within your build (conteinarize your build)
+*** Dockerfile with your project
+*** Dockerfile definition within pom.xml
+** If not docker - puppetize stuff(manifests)
+*** Puppet manifests - no client / server. To much hassle
+////
+
+////
+Provisioning is not the only thing
+* flyway migration tests (with docker, db instances)
 ////
 
 [data-background="#eee"]
-== Test data
+== Let's talk testers
 
 ////
-* flyway migration tests (with docker, db instances)
 * CDC test data
 ////
 
