@@ -21,8 +21,8 @@ repositories {
 }
 
 ext {
-	revealjsVersion = 'ammend-notes'
-	asciidoctorBackendVersion = 'master'
+	revealjsVersion = 'kubam'
+	asciidoctorBackendVersion = 'kubam'
 	downloadDir = new File(buildDir,'download')
 	templateDir = new File(downloadDir,'templates')
 	revealjsDir = new File(downloadDir,'reveal.js')

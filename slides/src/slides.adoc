@@ -12,6 +12,7 @@ Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
 :revealjs_customtheme: css/poang.css
 :revealjs_width: 1280
 :revealjs_height: 720
+:source-highlighter: coderay
 
 [data-background-image=images/what-is-love.gif, data-background-size=cover]
 == What is *_code_*?
@@ -30,10 +31,11 @@ Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
 --
 * Deeper dive
 ** Documentation. Requirements, architecture / design documents, checklists, specifications
-** Test data. Consumer driven contracts
 ** Operations. Infrastructure. Configurations. Database changes and migrations (sql / nosql).
+** Testers
 * I'll tackle 3 areas: documentation, infrastructure, test data
 ** Tools and why people are resistance to it?
+* This is new stuff - feedback is appreciated
 --
 
 [#aboutme%notitle]
@@ -98,15 +100,7 @@ You start understanding something went wrong
 * Excel
 * Enterprise architect
 * Confluence
-* Swagger (or other generated HTMLs)
-
-[data-background-image=images/documentation-flow.png, data-background-size=cover, options="notitle"]
-== How your documentation flow might look like
-
-[NOTE.speaker]
---
-An example information flow might look like - this is how it looks in one of a projects I participated in
---
+* Some generated HTMLs
 
 [data-background="#fff", options="notitle"]
 == Soundcloud documents
@@ -138,59 +132,290 @@ Documentation stakeholders & concerns
 * Developer: availability and comprehensiveness of documentation. Number of changes needed to be adjusted (number of required modifications)
 --
 
-== So what's wrong?
+== So what is wrong?
 
-////
+[%notitle]
+== Project documentation v0.1
+
+image::documents1.png[]
+
+[%notitle]
+== Project documentation v0.3
+
+image::documents2.png[]
+
+[NOTE.speaker]
+--
+* new release - 30 pages less
 * No diffs, changes not traceable
 * totally outside developers workflow - developers are the biggers stakeholders
-* versioning (in manual way), no blame and "lub czasopisma" not traceable
-** photo z "content management" - z systemami gdzie rzeczy leżą informacje
-////
+* versioning (in manual way), no blame and "lub czasopisma" not traceable 
+--
+
+[data-background-image=images/documentation-flow.png, data-background-size=cover, options="notitle"]
+== How your documentation flow might look like
+
+[NOTE.speaker]
+--
+An example information flow might look like - this is how it looks in one of a projects I participated in
+
+* We spread documentation over multiple siloses, different systems
+* One more example - simlar to the one previously. 
+** We mapped system were project related data is stored. 
+* This is not going in a good direction
+--
 
 [data-background="#fff"]
 == IEEE 1471
 
-.Just building a wrong thing?
+.Just writing a wrong thing?
 image::ieee1471.jpg[caption=""]
 
-////
-* what can we do about it?
-* architecture vs design. 
-** who here is having a role of solution architect?
-** and what you actually do? design a system?
-* architecture are principles (our API is self documenting), policies (we favour MySQL over Oracle), contexts (application landscape) - at the level of business requirements.
+[NOTE.speaker]
+--
+* As *solution architects* we focus on architecture description - creating docs (and that's how many understands modelling / architecture role) - *We tend to put too much there*
+* Architecture is principles / statements (our API is self documenting), policies (we favour MySQL over Oracle), contexts (application landscape) - at the level of business requirements.
 ** they usually should not change unless project's business objectives change
 ** if they change - we are building a different system / product
 * everything else is a design, it's an incremental process of building a solution
+--
+
+== Architecture vs. Design
+
+[NOTE.speaker]
+--
+* Design?
 ** you hardly ever know upfront the complete Container View from the C4 model
 ** what you design is heavily impacted by the feedback from the development team
 ** but still - we are keeping it in a different silo
-////
+* Often those closest to products (actually moving pixels/ cutting code) - have best ideas what the product should actually do
+* How we can make the actual design be as close to developer's workflow as possible
+--
 
-////
-* can we store the docs in git?
-* have we make it approachable by an average developer?
-* Try AsciiDoctor
-** Write structured documents (not like Word - which can be structured but usually isn't)
-** Include diagrams, flows - code snippets- and get a PDF within the buid process
-////
+== *Design as Code*?
 
-////
-project folder - springboot example
-asciidoctor folder - manual
-////
+[NOTE.speaker]
+--
+* what can we do to have documentation follow same *git-flow*?
+* ditch the docs
+** make documentation accessible by developers, let them take ownership
+* it starts with model, but quickly it's code that matters
+--
+
+[data-background-image=images/arch-vs-reality-ebCommunication.png, data-background="#fff", data-background-size=cover, options="notitle"]
+== This is what we want to avoid
+
+[data-background-image=images/arch-vs-reality-ebCommunication2.png, data-background="#fff", data-background-size=cover, options="notitle"]
+== As this how it looked in the original documents
+
+== *Design as Code*
+
+[%step]
+*Entity*:: Application models _(Domain models - POJOs)_
+*Control*:: Business processes / flows description _(Asciidoc)_
+*Boundary*:: Endpoints definitions _(Swagger)_
+
+[NOTE.speaker]
+--
+* That covers for most pervasive architectural pattern EBC: entity, boundary, controller (kudos go to @AdamBien)
+* Only point more mysterious may by Asciidoc
+--
+
+== Swagger
+
+[%notitle]
+=== What is Swagger?
+
+.A language-agnostic interface to REST APIs
+
+Top-down:: use _editor_ and _codegen_ the server implementation
+Bottom-up:: build documentation from existing REST API
+
+[%notitle]
+=== Swagger sample
+
+[source, java]
+....
+@javax.ws.rs.GET
+@javax.ws.rs.Path("/{id}")
+@swagger.ApiOperation(
+  value = "Get user", notes = "Returns the user of a given id with all subordinate objects.",
+  response = UserPersistedDto.class)
+@swagger.ApiResponses(value = { 
+  @swagger.ApiResponse(code = 200, message = "OK"),
+  @swagger.ApiResponse(code = 404, message = "User not found"),
+  @swagger.ApiResponse(code = 400, message = "Bad request, user's id validation failed") })
+public Response getUser(@NotEmpty 
+  @swagger.ApiParam(value = "ID of user, that is stored in database") 
+  @PathParam("id") Long id) {
+    UserPersistedDto user = userMapper.mapPersisted(userService.get(id));
+    return Response.ok().entity(user).build();
+}
+....
+
+[%notitle]
+=== YAML sample
+
+[source, yaml]
+....
+swagger: "2.0"
+info:
+  version: "1.0"
+  title: "Users API"
+paths:
+  /users/{id}:
+    get:
+      description: Returns the user of a given id with all subordinate objects.
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: ID of user, that is stored in database
+      responses:
+        200:
+          description: OK
+        404:
+       	  description: User not found.
+        400:
+          description: Bad request, user's id validation failed.
+....
+
+== Asciidoc
+
+[#asciidoc-intro%notitle]
+=== AsciiDoc vs Asciidoctor
+
+[.compare, cols=2]
+|===
+a|
+icon:file-text[role=illuminate]
+
+[discrete.proper]
+==== AsciiDoc
+
+syntax
+
+a|
+icon:wrench[role=illuminate]
+
+[discrete.proper]
+==== Asciidoctor
+
+parser + tools
+// ~ 50 repositories
+|===
+
+[NOTE.speaker]
+--
+* you say it's markdown. 
+** sort-of. But far more complete (try setting image properties in Markdown)
+** possible - yet in different flavours of Markdown
+--
+
+
+[%notitle]
+=== What AsciiDoc enables
+
+[cols="1,1,1,1,1"]
+[.emblems]
+|===
+| icon:keyboard-o[] 
+| icon:eye[] 
+| icon:git[] 
+| icon:share-square-o[] 
+| icon:flask[] 
+
+| edit
+| read
+| version
+| share
+| convert
+|===
+
+[#asciidoc-sample%notitle]
+=== AsciiDoc Sample
+
+[source,subs=-callouts]
+....
+= Getting Started with Java
+Author Name
+
+Here's your first Java application.
+
+.HelloWorld.java
+[source,java]
+----
+public class HelloWorld {
+  public static void main(String args[]) {
+    System.out.println("Hello, world!"); <1>
+  }
+}
+----
+<1> Prints "Hello, world!" to the console.
+
+Compile this source to a class file using `javac`.
+Then, run the compiled class file using `java`.
+....
+
+[%notitle]
+=== Asciidoc rendered
+
+image::asciidoc-rendered.png[]
+
+[data-background-image=images/done-part1.gif, data-background-size=cover]
+== No more Word design docs!
 
 [data-background="#eee"]
 == Let's talk operations
 
-////
-* handcrafted == error prone. 
-** roll forward, hands off policy ==> job security. they gonna fire me
+[NOTE.speaker]
+--
+* I'll not cover deployments, instructions, checklists
+** That's easy - asciidoc it and keep in project
+* I'll focus on provisioning and changes in infra
+--
+
+== People per server ratio
+
+[%step]
+* On average: 1 per 200 - 500 machines
+* In our company: 1 per 100 - 250 _(depends how counted)_
+* Facebook: 1 per *25000* - https://hbr.org/2015/06/an-inside-look-at-facebooks-approach-to-automation-and-human-work[Source]
+
+[NOTE.speaker]
+--
+That's expectation. You cannot adhere to it with
+
+* handcrafted infrastructure == error prone. 
+** job security. they gonna fire me
 * bottle necks
 ** SVN do wdrożeń. too busy cutting the trees to sharpen an axe
-** 100 maszyn, brak powtarzalności
-** Maciejewski - operations w facebooku
-////
+* configuration is code! 
+** but just keeping bash in git doesn't solve the problem
+** remember docs - same flow - git flow
+--
+
+== Set some principles
+
+* Every delivery step is a *Jenkins* job
+* Deployments are *roll-forward* only
+* *Hands off* policy - not logging to servers
+
+== And find the best too to do the job
+
+* http://docker.io/[Docker]
+* https://puppetlabs.com/[Puppet]
+* https://www.packer.io/[Packer.io]
+
+[NOTE.speaker]
+--
+* Depending how hipster we are
+* How much freedom we have
+** What is overall maturity of the organisation / team
+--
+
+== Docker
 
 ////
 * We can try hipster - let's go Dockers.
@@ -206,12 +431,44 @@ Provisioning is not the only thing
 * flyway migration tests (with docker, db instances)
 ////
 
+== Is this all?
+
+[%step]
+* Infrastructure - icon:check-square-o[]
+* Applications - icon:check-square-o[]
+* Data - icon:spinner[]
+
+
+
+[data-background-image=images/done-part2-operations.gif, data-background-size=cover]
+== Operations sanity
+
 [data-background="#eee"]
 == Let's talk testers
 
-////
-* CDC test data
-////
+== What QA stands for?
+
+[%step]
+* Quality Assurance?
+* Quality Analyst?
+* Quality Ambassador?
+
+[NOTE.speaker]
+--
+* QA is not about checking / validating
+** Testing is not checking
+* If QA builds a process, awareness - checking should be automated
+** If it's automated, make part of it human readable
+--
+
+== But it's all covered
+
+* Test cases are code
+* Test data is code
+* Configuration is code
+
+[data-background-image=images/done-part3-testers.gif, data-background-size=cover]
+== Just do it!
 
 [data-background="#eee"]
 == Puenta?
@@ -230,7 +487,7 @@ Provisioning is not the only thing
 [NOTE.speaker]
 --
 * Crunch some walls
-** Architecture are principles. Design is code
+** Architecture are principles / *decisions*. Design is code
 ** You code it, you deploy
 ** And get rid of the Enterprise Architect (Sparx one). It's neither enterprise nor architects - it's just a tool
 --
@@ -258,4 +515,7 @@ Follow me on twitter
 
 This presentation was made with AsciiDoc
   https://github.com/kubamarchwicki/what-is-code
+
+Some inspirations from Dan Allen (@mojavelinux)
+  http://mojavelinux.github.io/decks/zen-of-writing-asciidoctor/devnexus2015/
 ----
