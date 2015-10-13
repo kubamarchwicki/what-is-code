@@ -1,5 +1,6 @@
 = What is *_code_*?
 Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
+:idprefix: slide_
 :title-slide-background-image: code-example.jpg
 :title-slide-background-size: cover
 :icons: font
@@ -14,8 +15,7 @@ Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
 :revealjs_height: 720
 :source-highlighter: coderay
 
-[data-background-image=images/what-is-love.gif, data-background-size=cover]
-== What is *_code_*?
+== What is *_project_*?
 
 == Things to cover
 
@@ -68,14 +68,15 @@ image::logo-symentis.png[width=190, role="logo"]
 --
 Who am I?
 
-YDP - Education Publisher
+* YDP - Education Publisher
+* Architect there
 --
+
+[%notitle, data-background-image=images/i-have-no-clue.gif, data-background-size=cover]
+== What are we doing?
 
 [data-background="#eee"]
 == What are we doing?
-
-[data-background-image=images/i-have-no-clue.gif, data-background-size=cover, options="notitle"]
-== I have no idea what I'm doing
 
 [NOTE.speaker]
 --
@@ -169,7 +170,7 @@ image::documents2.png[]
 * versioning (in manual way), no blame and "lub czasopisma" not traceable 
 --
 
-[data-background-image=images/documentation-flow.png, data-background-size=cover, options="notitle"]
+[data-background-image=images/documentation-flow.png, data-background-size=cover]
 == How your documentation flow might look like
 
 [NOTE.speaker]
@@ -221,10 +222,10 @@ image::ieee1471.jpg[caption=""]
 * it starts with model, but quickly it's code that matters
 --
 
-[data-background-image=images/arch-vs-reality-ebCommunication.png, data-background="#fff", data-background-size=cover, options="notitle"]
+[%notitle, data-background-image=images/arch-vs-reality-ebCommunication-cut.png, data-background="#fff", data-background-size=cover]
 == This is what we want to avoid
 
-[data-background-image=images/arch-vs-reality-ebCommunication2.png, data-background="#fff", data-background-size=cover, options="notitle"]
+[%notitle, data-background-image=images/arch-vs-reality-ebCommunication2-cut.png, data-background="#fff", data-background-size=cover]
 == As this how it looked in the original documents
 
 == *Design as Code*
@@ -302,7 +303,7 @@ paths:
 
 == Asciidoc
 
-[#asciidoc-intro%notitle]
+[%notitle]
 === AsciiDoc vs Asciidoctor
 
 [.compare, cols=2]
@@ -352,7 +353,7 @@ parser + tools
 | convert
 |===
 
-[#asciidoc-sample%notitle]
+[%notitle]
 === AsciiDoc Sample
 
 [source,subs=-callouts]
@@ -693,12 +694,18 @@ Success - all the data are stored in git and versioned and maintained
 [data-background-image=images/puenta-bubbles.gif, data-background-size=cover]
 == OMG! We got tools!
 
+[data-background="#eee"]
+== OMG! We got tools!
+
 [NOTE.speaker]
 --
 * There are tools, but it's not about tools. Shift is the change of organisation
 --
 
 [data-background-image=images/puenta-crunch-walls.gif, data-background-size=cover]
+== Crunch some walls!
+
+[data-background="#eee"]
 == Crunch some walls!
 
 [NOTE.speaker]
@@ -710,6 +717,9 @@ Success - all the data are stored in git and versioned and maintained
 --
 
 [data-background-image=images/puenta-shigeru.gif, data-background-size=cover]
+== Change the organisation?
+
+[data-background="#eee"]
 == Change the organisation?
 
 [NOTE.speaker]
@@ -731,6 +741,7 @@ Follow me on twitter
   @kubem
 
 This presentation was made with AsciiDoc
+Presentation source and examples
   https://github.com/kubamarchwicki/what-is-code
 
 Some inspirations from Dan Allen (@mojavelinux)
