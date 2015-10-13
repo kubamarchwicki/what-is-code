@@ -23,8 +23,8 @@ Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
 * What do we actually do?
 * Is code everything?
 * What about business?
-* What about testers?
 * What about operations?
+* What about testers?
 * *This is not a _softskills_ talk*
 
 [NOTE.speaker]
@@ -81,14 +81,29 @@ YDP - Education Publisher
 --
 Start with code - but there are other things in the project
 
-* bunch of documentation (Didactus) + changes (bring more copies)
-* Content model (when tracking changes went wrong)
-* GM CR migrations. I was DevOps before it was trendy
-* waiting for another developer to do their migration
+* bunch of documentation (Didactus) + changes (even more documents)
+* document without tracking - or tracing totaly unredeable
+* tedious data migrations (through a far of "nearly identical" servers)
+* waiting for another developer to do their migration (at 5am in the morning)
 * operations saying: I know you've written docs, but we don't read it (we just want you to write them)
-* testert driven development
 
 You start understanding something went wrong
+--
+
+[data-background="#eee", data-background-image=images/misc-all-the-things.jpg, data-background-size=cover]
+== Git-flow all the things
+
+{zwsp}
+
+{zwsp}
+
+{zwsp}
+
+{zwsp}
+
+[NOTE.speaker]
+--
+Devs workflow is totally different - maybe we should adhere to that
 --
 
 [data-background="#eee"]
@@ -120,7 +135,9 @@ Question is - who is the dcumentation for
 * Products Owners
 * Projects Managers / Team Leads
 * *Developers*
-* Analysts (?)
+* Analysts
+* User Experience Designers
+* Ops Guys
 
 [NOTE.speaker]
 --
@@ -163,6 +180,8 @@ An example information flow might look like - this is how it looks in one of a p
 * One more example - simlar to the one previously. 
 ** We mapped system were project related data is stored. 
 * This is not going in a good direction
+
+We regard it as solution architecture. *The solution architecture*
 --
 
 [data-background="#fff"]
@@ -373,8 +392,25 @@ image::asciidoc-rendered.png[]
 --
 * I'll not cover deployments, instructions, checklists
 ** That's easy - asciidoc it and keep in project
-* I'll focus on provisioning and changes in infra
+* I'll focus on provisioning and changes in infrastructure
 --
+
+== Operations scope
+
+[%step]
+* Infrastructure 
+* Application deployment
+* Data migrations
+* Monitoring
+
+[NOTE.speaker]
+--
+* how it works with operations
+** they have machines configured on their own
+** they install application `svn up` 
+** they migrate the data - if needed - with `db init`
+--
+
 
 == People per server ratio
 
@@ -402,11 +438,11 @@ That's expectation. You cannot adhere to it with
 * Deployments are *roll-forward* only
 * *Hands off* policy - not logging to servers
 
-== And find the best too to do the job
+== Find the best tool for the job
 
 * http://docker.io/[Docker]
-* https://puppetlabs.com/[Puppet]
-* https://www.packer.io/[Packer.io]
+* https://puppetlabs.com/[Puppet] or https://www.chef.io/[Chef] or http://www.ansible.com/[Ansible]
+** with https://www.packer.io/[Packer.io]
 
 [NOTE.speaker]
 --
@@ -415,29 +451,210 @@ That's expectation. You cannot adhere to it with
 ** What is overall maturity of the organisation / team
 --
 
-== Docker
+== With containers
 
-////
-* We can try hipster - let's go Dockers.
-** Docker within your build (conteinarize your build)
-*** Dockerfile with your project
-*** Dockerfile definition within pom.xml
-** If not docker - puppetize stuff(manifests)
-*** Puppet manifests - no client / server. To much hassle
-////
+[NOTE.speaker]
+--
+* Docker package application and it's dependencies into a virtual container
+** you put your app into container
+** make all it's dependencies explicite
+--
 
-////
-Provisioning is not the only thing
-* flyway migration tests (with docker, db instances)
-////
+[%notitle]
+=== Docker in code
 
-== Is this all?
+[source]
+.Dockerfile
+....
+FROM java:8
+COPY maven /maven/
+CMD ["java","-jar","/maven/app.jar"]
+....
 
-[%step]
+[source]
+....
+{ / } » docker build -t spring-boot-example .
+{ / } » docker run --rm spring-boot-example
+....
+
+[%notitle]
+=== Docker in Maven
+
+[source,xml]
+....
+<name>spring-boot-example</name>
+<build>
+    <from>java:8</from>
+    <tags>
+        <tag>latest</tag>
+    </tags>
+    <assembly>
+        <inline>
+            <dependencySets>
+                <dependencySet>
+                    <includes>
+                        <include>com.example:spring-boot</include>
+                    </includes>
+                    <outputFileNameMapping>app.jar</outputFileNameMapping>
+                </dependencySet>
+            </dependencySets>
+        </inline>
+    </assembly>
+    <cmd>
+        <exec>
+            <arg>java</arg>
+            <arg>-jar</arg>
+            <arg>/maven/app.jar</arg>
+        </exec>
+    </cmd>
+</build>            
+....
+
+[NOTE.speaker]
+--
+* plugin by Roland Huss for Maven
+** but there is something for gradle as well
+* let it run as a part of you CI process
+** within a single project or independently
+--
+
+== Without containers
+
+=== Packer
+
+Dev/prod parity:: Keep development, staging, and production as similar as possible
+Enviroment from template:: Generate images for multiple platforms at the same time
+
+[NOTE.speaker]
+--
+* From twelve factor app, to address
+** time gap - like release once a year. *Great idea - if it's hard, make it rarely*
+** personal gap - different ppl doing different things
+** tools gap - different stacks for dev and ops (Nginx, SQLite, and OS X / Apache, MySQL, and Linux)
+* Guess what - it's written in Golang
+--
+
+=== Packer templates
+
+* *builders* - configure the image
+* *post-processors* - clean up, save and compress the VM
+* *provisioners* - scripts you run on your image
+
+[NOTE.speaker]
+--
+* buider is actual VM configuration 
+* provisioners are shell scripts you run after the configuration process on you environment (like `apt-get`)
+--
+
+[%notitle]
+=== Packer templates example
+
+[source, json]
+....
+{
+  "builders": [
+    {
+      "disk_size": 40960,
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso"
+      ...
+    }
+  ],
+  "post-processors": [
+    {
+      "output": "builds/{{user `box_basename`}}.{{.Provider}}.box",
+      "type": "vagrant"
+    }
+  ],
+  ...
+....
+
+[%notitle]
+=== Packer templates example (2)
+
+[source, json]
+....
+  "provisioners": [
+    {
+      "scripts": [
+        "scripts/ubuntu/update.sh"
+      ],
+      "type": "shell"
+    }
+  ],
+  "variables": {
+    "box_basename": "ubuntu-14.10",
+    "template": "ubuntu-14.10-amd64",
+  }
+}
+....
+
+=== Use your fav provisioning tool
+
+[NOTE.speaker]
+--
+* No holy war between ansible, puppet or chef
+* Our workflow
+** Pakcer install additional service fr provisioning
+** Jenkins calls it (webservice) with env type parameter
+*** It install java / vertx environment
+** Jenkins call it with a service name
+*** It deploys application
+--
+
+== Operations scope
+
 * Infrastructure - icon:check-square-o[]
-* Applications - icon:check-square-o[]
-* Data - icon:spinner[]
+* Application deployment - icon:check-square-o[]
+* Data migrations
+* Monitoring
 
+== Schema migrations with Flyway
+
+[NOTE.speaker]
+--
+* as developers we have this tendency to abstract SQL
+** it's first class citizen - accept it
+* Flyway uses SQL as the primary languages (noXML)
+* you hardly ever need to change database 
+--
+
+[%notitle]
+=== How it works
+
+[source]
+....
+└── sql
+    ├── V1__Create_person_table.sql
+    └── V2__Add_people.sql
+....
+
+[source]
+....
+{ sql } » flyway migrate
+Creating Metadata table: "PUBLIC"."schema_version"
+Current version of schema "PUBLIC": << Empty Schema >>
+Migrating schema "PUBLIC" to version 2
+Successfully applied 1 migration to schema "PUBLIC" (execution time 00:00.062s).
+....
+
+=== How it works in details
+
+* creates *metadata table* _(SCHEMA_VERSION)_ - if doesn't exists
+* applies migrations sorted by *version numer* and executed in *order*
+
+image::SchemaVersion21.png[]
+
+[NOTE.speaker]
+--
+Success - all the data are stored in git and versioned and maintained
+--
+
+== Operations scope
+
+* Infrastructure - icon:check-square-o[]
+* Application deployment - icon:check-square-o[]
+* Data migrations - icon:check-square-o[]
+* Monitoring - icon:spinner[]
 
 
 [data-background-image=images/done-part2-operations.gif, data-background-size=cover]

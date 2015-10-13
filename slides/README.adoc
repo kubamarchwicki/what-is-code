@@ -1,0 +1,4 @@
+== Create PDF
+
+[source]
+deck2pdf --profile=revealjs --width=968 --height=547 slides.html slides.pdf
