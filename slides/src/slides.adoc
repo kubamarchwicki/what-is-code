@@ -170,7 +170,7 @@ image::documents2.png[]
 * versioning (in manual way), no blame and "lub czasopisma" not traceable 
 --
 
-[data-background-image=images/documentation-flow.png, data-background-size=cover]
+[%notitle, data-background-image=images/documentation-flow.png, data-background-size=cover]
 == How your documentation flow might look like
 
 [NOTE.speaker]
