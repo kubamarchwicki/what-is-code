@@ -666,14 +666,14 @@ Enviroment from template:: Generate images for multiple platforms at the same ti
 * you hardly ever need to change database 
 --
 
-[%notitle]
-=== How it works
+=== Command Line way
 
 [source]
 ....
-└── sql
-    ├── V1__Create_person_table.sql
-    └── V2__Add_people.sql
+└── db
+    └── migration
+        ├── V1__Create_person_table.sql
+        └── V2__Add_people.sql
 ....
 
 [source]
@@ -681,11 +681,28 @@ Enviroment from template:: Generate images for multiple platforms at the same ti
 { sql } » flyway migrate
 Creating Metadata table: "PUBLIC"."schema_version"
 Current version of schema "PUBLIC": << Empty Schema >>
-Migrating schema "PUBLIC" to version 2
-Successfully applied 1 migration to schema "PUBLIC" (execution time 00:00.062s).
+Migrating schema `test` to version 1 - create-schemas
+Successfully applied 1 migration to schema "PUBLIC" (execution time 00:00.249s).
 ....
 
-=== How it works in details
+=== Spring App way
+
+[source, java]
+....
+@Bean(initMethod = "migrate")
+public Flyway flyway(DataSource ds) {
+  Flyway flyway = new Flyway();
+  flyway.setDataSource(ds);
+  return flyway;
+}
+
+@Bean @DependsOn("flyway")
+public EntityManagerFactory entityManagerFactory() {
+  //...
+}
+....
+
+=== ... in details
 
 * creates *metadata table* _(SCHEMA_VERSION)_ - if doesn't exists
 * applies migrations sorted by *version numer* and executed in *order*
