@@ -28,6 +28,14 @@ ext {
 	revealjsDir = new File(downloadDir,'reveal.js')
 }
 
+configurations {
+	pdf
+}
+
+dependencies {
+	pdf 'me.champeau.deck2pdf:deck2pdf:0.3.0'
+}
+
 task download << {
 	mkdir downloadDir
 	vfs {
@@ -67,4 +75,16 @@ asciidoctor {
 	backends = ['revealjs']	
 
 	options template_dir: new File(templateDir,'templates/slim').absolutePath
+}
+
+task generatePdf(type:JavaExec) {
+  dependsOn asciidoctor
+  main = 'me.champeau.deck2pdf.Main'
+  workingDir = file("$buildDir/asciidoc/")
+  args = ["$workingDir/revealjs/slides.html","$workingDir/pdf/${project.name}.pdf", '--profile=revealjs', '--width=968', '--height=547']
+  classpath = configurations.pdf
+
+  doFirst {
+    file("$workingDir/pdf/").mkdirs()
+  }
 }
