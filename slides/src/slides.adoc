@@ -301,6 +301,43 @@ paths:
           description: Bad request, user's id validation failed.
 ....
 
+[%notitle]
+=== Spring example
+
+[source, java]
+----
+@EnableSwagger2 // <1>
+public class App {
+
+  @Bean
+  public Docket exampleApi() {
+    return new Docket(DocumentationType.SWAGGER_2) //<2>
+        .select()
+        .apis(RequestHandlerSelectors.any())
+        .paths(PathSelectors.any())
+        .build()
+      .pathMapping("/");
+  }
+}
+----
+<1> Enables Springfox swagger 2
+<2> `Docket`, Sringfox’s, primary api configuration mechanism is initialized for swagger specification 2.0
+
+[NOTE.speaker]
+--
+Sometimes - like for Spring applications - it sets even simples
+--
+
+[%notitle]
+=== This is what we get
+
+image::swagger-example.png[]
+
+[NOTE.speaker]
+--
+The output is fully interactive and it let me actually browser the API
+--
+
 == Asciidoc
 
 [%notitle]
@@ -377,6 +414,16 @@ public class HelloWorld {
 Compile this source to a class file using `javac`.
 Then, run the compiled class file using `java`.
 ....
+
+[NOTE.speaker]
+--
+Asciidoctor is a lightweight markup
+
+* headers, links, lists - obvious stuff
+* Code snippets is first class citizen +
+  With includes
+* Diagrams (from ascii to image)
+--
 
 [%notitle]
 === Asciidoc rendered
