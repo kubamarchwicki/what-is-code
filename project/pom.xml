@@ -31,37 +31,48 @@
     <!-- end::depMgmt[] -->
 
     <dependencies>
+        <!-- tag::deps-web[] -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>1.2.1.RELEASE</version>
         </dependency>
+        <!-- end::deps-web[] -->
+        <!-- tag::deps-actuator[] -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-actuator</artifactId>
             <version>1.2.1.RELEASE</version>
-        </dependency>    
+        </dependency>
+        <!-- end::deps-actuator[] -->
+        <!-- tag::deps-jpa[] -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>1.2.1.RELEASE</version>
         </dependency>
+        <!-- end::deps-jpa[] -->
+        <!-- tag::deps-data-rest[] -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
             <version>1.2.1.RELEASE</version>
         </dependency>
+        <!-- end::deps-data-rest[] -->
+        <!-- tag::deps-aop[] -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
             <version>1.2.1.RELEASE</version>
         </dependency>
+        <!-- end::deps-aop[] -->
+        <!-- tag::deps-db-connector[] -->
         <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>2.3.3</version>
-            <scope>runtime</scope>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.31</version>
         </dependency>
+        <!-- end::deps-db-connector[] -->
 
         <dependency>
             <groupId>junit</groupId>
@@ -73,6 +84,7 @@
 
     <build>
         <plugins>
+            <!-- tag::build-plugin[] -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -80,11 +92,12 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>repackage</goal>  <!--1-->
                         </goals>
                     </execution>
                 </executions>                
             </plugin>
+            <!-- end::build-plugin[] -->
         </plugins>
     </build>
 </project>

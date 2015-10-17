@@ -1,10 +1,17 @@
+#asciidoctor output
 *.lock
 *.pdf
 *.html
 !slides*.html
 *~
 diag-*
+
+#builders (maven / gradle)
 build/
 .gradle
 tmp
 target
+
+#Idea
+.idea
+*.iml

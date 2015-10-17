@@ -20,12 +20,10 @@ import java.util.List;
 public class App {
 
     private Dictionary dict;
-    private TransactionLogRepository repository;
 
     @Autowired
-    public App(Dictionary dict, TransactionLogRepository repository) {
+    public App(Dictionary dict) {
         this.dict = dict;
-        this.repository = repository;
     }
 
 

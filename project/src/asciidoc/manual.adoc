@@ -16,19 +16,20 @@ include::{basedir}/pom.xml[tags=depMgmt, indent=0]
 [source, xml]
 .dependency
 ----
-include::{basedir}/pom.xml[lines="35,36", indent=0]
+include::{basedir}/pom.xml[tags=deps-web, indent=0]
 ----
 
 [source, xml]
 .build / plugins
 ----
-include::{basedir}/pom.xml[lines="76,77", indent=0]
+include::{basedir}/pom.xml[tags=build-plugin, indent=0]
 ----
+<1> Repackages existing JAR and WAR archives so that they can be executed from the command line using java -jar.
 
 [source,java]
 .App.java
 ----
-include::{sourcedir}/com/example/App.java[lines="17..41", indent=0]
+include::{sourcedir}/com/example/App.java[lines="17..-1", indent=0]
 ----
 
 <<<
@@ -37,7 +38,7 @@ include::{sourcedir}/com/example/App.java[lines="17..41", indent=0]
 
 [source, xml]
 ----
-include::{basedir}/pom.xml[lines="39..41,43", indent=0]
+include::{basedir}/pom.xml[tags=deps-actuator, indent=0]
 ----
 
 <<<
@@ -47,18 +48,15 @@ include::{basedir}/pom.xml[lines="39..41,43", indent=0]
 Transaction Log and log endpoint
 
 [source, xml]
-.dependencies
+.JPA dependencies
 ----
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-data-jpa</artifactId>
-</dependency>
-<dependency>
-    <groupId>org.hsqldb</groupId>
-    <artifactId>hsqldb</artifactId>
-    <scope>runtime</scope>
-</dependency>
+include::{basedir}/pom.xml[tags=deps-jpa;deps-db-connector, indent=0]
 ----
+
+[source, yaml]
+.Database configuration
+include::{basedir}/src/main/resources/application.yml[]
+
 
 [source, java]
 .TransactionLog.java
@@ -75,50 +73,25 @@ include::{sourcedir}/com/example/audit/TranslationLog.java[lines="8..15", indent
 include::{sourcedir}/com/example/audit/TransactionLogRepository.java[lines="8..-1", indent=0]
 ----
 
+[source, java]
+.TranslationLogResource.java
+----
+include::{sourcedir}/com/example/audit/TranslationLogResource.java[lines="9..-1", indent=0]
+----
+
 <<<
 
 == REST & Spring Data REST 
 
-[source, java]
-.App.java
-----
-@Autowired
-TransactionLogRepository repository;
-
-@RequestMapping("/log")
-public List<TranslationLog> log() {
- return repository.findAll();
-}
-
-@RequestMapping("/{word}")
-public List<DictionaryWord> getTranslations(@PathVariable String word) throws IOException {
- List<DictionaryWord> translations = dict.getTranslations(word);
-
- TranslationLog log = new TranslationLog();
- log.setPolishWord(word);
- log.setCnt(translations.size());
- log.setTimestamp(new Date());
- repository.save(log);
-
- return translations;
-}
-----
-
 [source, xml]
 .dependencies
 ----
-<dependency>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-starter-data-rest</artifactId>
-</dependency>
+include::{basedir}/pom.xml[tags=deps-data-rest, indent=0]
 ----
 
 [source, java]
 ----
-@RepositoryRestResource(collectionResourceRel = "logs", path = "logs")
-public interface TransactionLogRepository extends JpaRepository<TranslationLog, Long> {
-
-}
+include::{sourcedir}/com/example/audit/TransactionLogRepository.java[lines="7..-1", indent=0]
 ----
 
 <<<
@@ -127,8 +100,7 @@ public interface TransactionLogRepository extends JpaRepository<TranslationLog, 
 
 [source,xml]
 ----
-<groupId>org.springframework.boot</groupId>
-<artifactId>spring-boot-starter-aop</artifactId>
+include::{basedir}/pom.xml[tags=deps-aop, indent=0]
 ----
 
 [source,java]
