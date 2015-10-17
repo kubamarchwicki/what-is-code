@@ -3,7 +3,41 @@
 :sourcedir: {basedir}/src/main/java
 :source-highlighter: coderay
 
-This are steps to guide through a spring-boot application showcase. 
+These are steps guiding through a spring-boot application showcase. 
+
+== Example context
+
+The diagram depicts the context diagram for the example projects, outlining the logical view of communication between system components. 
+
+
+[plantuml, "context-diagram"]
+....
+node "spring-boot" {
+	[Translation Service] as service
+	[Translation Log] as log
+	[Log Resource] as logWs
+
+	service . log : audits
+}
+
+node "dict.pl" {
+	[Transation processor] as dict
+}
+
+database "MySQL" {
+	folder "Translation" {
+		[Log] as db
+	}
+}
+
+:User: -> service : use
+:User: -> logWs : use
+
+service --> dict : calls
+
+log --> db : stores
+db --> logWs : retrieves
+....
 
 == RestController
 

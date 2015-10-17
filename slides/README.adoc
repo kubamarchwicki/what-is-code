@@ -2,3 +2,18 @@
 
 [source]
 deck2pdf --profile=revealjs --width=968 --height=547 slides.html slides.pdf
+
+== Feedback
+
+[x] Change nam what is project (whats in project?) 
+[ ] Pokazac source code. Jak to jest naprawdę 
+[x] Asciidoctor diagram. With ditaa or plantuml
+[x] Nie mowic podczas animowanych gifow
+[ ] Swagger source / example and HTML - spring boot with JAX-RS
+	http://stackoverflow.com/questions/32636747/swagger-spring-editing-the-urls
+[ ] Packer + Ansible example
+[ ] Database migration example
+	[x] Add MySQL to the project (with docker compose)
+	[ ] Create basic `translation_log` schema
+[ ] Docker deployment with Docker compose (application + database + database migration)
+[ ] Spring-boot env variables
