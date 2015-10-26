@@ -32,7 +32,7 @@ Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
 * Deeper dive
 ** Documentation. Requirements, architecture / design documents, checklists, specifications
 ** Operations. Infrastructure. Configurations. Database changes and migrations (sql / nosql).
-** Testers
+** Testers - and their feedback on documentation
 * I'll tackle 3 areas: documentation, infrastructure, test data
 ** Tools and why people are resistance to it?
 * This is new stuff - feedback is appreciated
@@ -104,7 +104,8 @@ You start understanding something went wrong
 
 [NOTE.speaker]
 --
-Devs workflow is totally different - maybe we should adhere to that
+* Devs workflow is totally different - maybe we should adhere to that
+* That's where we would like to get
 --
 
 [data-background="#eee"]
@@ -126,7 +127,8 @@ image::documentation-soundcloud.png[caption="Example "]
 
 [NOTE.speaker]
 --
-An example what is used within Soundcloud. 
+* An example what is used within Soundcloud. 
+** a set of different Siloses
 
 Question is - who is the dcumentation for
 --
@@ -489,6 +491,7 @@ That's expectation. You cannot adhere to it with
 == Find the best tool for the job
 
 * http://docker.io/[Docker]
+* https://www.vagrantup.com/[Vagrant]
 * https://puppetlabs.com/[Puppet] or https://www.chef.io/[Chef] or http://www.ansible.com/[Ansible]
 ** with https://www.packer.io/[Packer.io]
 
@@ -497,7 +500,15 @@ That's expectation. You cannot adhere to it with
 * Depending how hipster we are
 * How much freedom we have
 ** What is overall maturity of the organisation / team
+
+This is something *Radek Simko* covered in details yesterday, so I'll just it the provisioning part. 
+
+* Just put you higher-level into the source code
+* And thus I'll be able show some code
 --
+
+// TODO: do it better, with vagrant + ansible
+//// 
 
 == With containers
 
@@ -575,6 +586,8 @@ Enviroment from template:: Generate images for multiple platforms at the same ti
 
 [NOTE.speaker]
 --
+* Baked image which have a state which you start upon
+** if you don't want to build the machine with every `vagrant up`
 * From twelve factor app, to address
 ** time gap - like release once a year. *Great idea - if it's hard, make it rarely*
 ** personal gap - different ppl doing different things
@@ -648,6 +661,7 @@ Enviroment from template:: Generate images for multiple platforms at the same ti
 ** Jenkins call it with a service name
 *** It deploys application
 --
+////
 
 == Operations scope
 
@@ -743,7 +757,125 @@ Success - all the data are stored in git and versioned and maintained
 ** If it's automated, make part of it human readable
 --
 
-== But it's all covered
+
+== Cucumber BDD style
+
+=== Define the scenario
+
+[source, txt]
+--
+Feature: Words translation
+
+  Scenario: Translate the word house
+    Given The word house
+    When I do the translation
+    Then the result is dom
+--
+
+=== Do the implementation
+
+[source, java]
+--
+@Given("^The word (\\w+)$")
+public void should_translate_the_word(Sting word) {
+    get().uri(root, "translate/" + word);
+}
+
+@When("^I do the translation$")
+public void execute_transation() {
+    response = request.execute();
+}
+
+@Then("^the result is (.*)$")
+public void validate_the_translation(String expectedWord) {
+    String word = response.body();
+    assertThat(word, is(expectedWord));
+}
+--
+
+[NOTE.speaker]
+--
+* And business will write the recipes 
+** Noone / ever 
+* So we do loads of additional boilerplate we need to maintain
+--
+
+== Spock
+
+* a testing and specification framework +
+  _for Java and Groovy_
+* beautiful and highly expressive specification language
+
+[NOTE.speaker]
+--
+* Our testers are eager to learn coding (to certain extent)
+* Like groovy for SoapUI assertions
+** And they see OK with Spock tests
+--
+
+=== Write the tests with @unroll
+
+[source, groovy]
+----
+@Unroll("translation for #word is #translation")
+def 'translate the words'() {
+    expect:
+		translation = get().uri(root, "translate/" + word).execute();
+    where:
+        words	| translation
+        cinema 	| kino
+        house  	| dom
+}
+----
+
+
+[NOTE.speaker]
+--
+* This is quite human readable
+** As we want our testers to be test engineers not scenario checkers
+** They are eager to learn and are fine with such languages
+** Just need support at the beginning
+--
+
+=== Reportize all the things
+
+[source, xml]
+----
+<dependency>
+  <groupId>com.athaydes</groupId>
+  <artifactId>spock-reports</artifactId>
+  <scope>test</scope>
+</dependency>
+----
+
+
+[NOTE.speaker]
+--
+This is little something Marcin Grzejszczak told me yesterday - report all the things
+
+And you get HTML out of it
+--
+
+=== But I don't want my testers to...
+
+[%step]
+* Take Docker containers
+* Spin it with containerless Arquillian Cube
+* Write your Spock tests
+
+[NOTE.speaker]
+--
+Mock, Stub, Fiddle with environment
+
+They don't need to
+
+* Take Docker containers
+** like the whole thing, from the previous examples
+* spin it with Arquillian Cube
+* Write the test like a boss
+--
+
+== So it's all covered
 
 * Test cases are code
 * Test data is code
