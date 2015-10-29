@@ -1,0 +1,3 @@
+FROM kubamarchwicki/spring-boot-example
+
+COPY ${deployableFilename} /tmp/${deployableFilename}

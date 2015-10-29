@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://jboss.org/schema/arquillian"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian
+  http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <extension qualifier="docker">
+        <property name="autoStartContainers">mysql</property>
+        <property name="serverVersion">1.12</property>
+        <property name="dockerContainers">
+            app:
+                buildImage:
+                    dockerfileLocation: src/test/resources/app-template
+                    noCache: true
+                    remove: true
+                portBindings: [8080/tcp]
+                await:
+                    strategy: sleeping
+                    sleepTime: 20s
+                links:
+                    - mysql:mysql
+            mysql:
+                image: tutum/mysql
+                portBindings: [13306->3306/tcp]
+                await:
+                    strategy: polling
+                    sleepPollingTime: 2s
+                env: [MYSQL_USER=admin, MYSQL_PASS=admin, ON_CREATE_DB=test]
+        </property>
+    </extension>
+
+    <container qualifier="containerless" default="true">
+        <configuration>
+            <property name="containerlessDocker">app</property>
+            <property name="embeddedPort">8080</property>
+        </configuration>
+    </container>
+
+</arquillian>
