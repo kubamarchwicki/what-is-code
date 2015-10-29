@@ -13,7 +13,7 @@
                     dockerfileLocation: src/test/resources/app-template
                     noCache: true
                     remove: true
-                portBindings: [8080/tcp]
+                portBindings: [18080->8080/tcp]
                 await:
                     strategy: sleeping
                     sleepTime: 20s
@@ -32,7 +32,7 @@
     <container qualifier="containerless" default="true">
         <configuration>
             <property name="containerlessDocker">app</property>
-            <property name="embeddedPort">8080</property>
+            <property name="embeddedPort">18080</property>
         </configuration>
     </container>
 
