@@ -813,18 +813,29 @@ public void validate_the_translation(String expectedWord) {
 ** And they see OK with Spock tests
 --
 
+[%notitle]
 === Write the tests with @unroll
 
 [source, groovy]
 ----
-@Unroll("translation for #word is #translation")
-def 'translate the words'() {
-    expect:
-		translation = get().uri(root, "translate/" + word).execute();
-    where:
-        words	| translation
-        cinema 	| kino
-        house  	| dom
+@Unroll("Translations for word: [#word]")
+class WordTranslationsSpec extends Specification {
+    def host = "http://localhost:18080"
+
+    def "Should translate given words"() {
+        when: "Translation service is called"
+            def response = RestAssured.given().get("${host}/translate/${word}")
+        then: "Status code 200 is returned"
+            response.statusCode() == 200
+        and: "Array of translated words is returned"
+            def translations = JsonPath.from(response.asString()).get("englishWord")
+            translations.size() == responseSize
+            translations[0] == firstTranslation
+        where:
+            word        | responseSize  | firstTranslation
+            "domek"     | 24            | "lodge"
+            "asdfghj"   | 0             | null
+    }
 }
 ----
 
@@ -843,11 +854,14 @@ def 'translate the words'() {
 ----
 <dependency>
   <groupId>com.athaydes</groupId>
-  <artifactId>spock-reports</artifactId>
+  <artifactId>spock-reports</artifactId> <!--1-->
   <scope>test</scope>
 </dependency>
 ----
 
+---
+
+image::spock-reports.png[]
 
 [NOTE.speaker]
 --
@@ -939,6 +953,7 @@ Follow me on twitter
 This presentation was made with AsciiDoc
 Presentation source and examples
   https://github.com/kubamarchwicki/what-is-code
+  -- including links
 
 Some inspirations from Dan Allen (@mojavelinux)
   http://mojavelinux.github.io/decks/zen-of-writing-asciidoctor/devnexus2015/
