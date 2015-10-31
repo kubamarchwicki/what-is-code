@@ -1,0 +1,24 @@
+= What is code?
+
+This is slide deck (`slides` folder) and code examples for my `What is code` presentation. 
+
+== Abstract
+
+That sounds like an easy-to-answer question. A set of Java / Ruby / C# / Scala / Whatever tokens you mashup together everyday to get the business happy, right? 
+
+If you are in the business long enough you know there are rules, there are means to keep you code clear, nice, readable. You know to comment the stuff accordingly. You know to commit and push at the end of the day. And what you push is what you call "The Code". 
+
+But as you pursue through the developers professional career you start to notice that other things are becoming somehow important. It's not just The Code you need to pay attention to. It can be configuration, database changes and test data. 
+Than you look after requirements (like BDD being the tip of an iceberg - the behaviour part), documentation (models - the static parts). When you are all done, sometimes it's required to throw all over the wall to operations; so you are busy with check-list, manuals. You start to notice these all need the same attention as The Code, but it just got spread through some bugtracks, wikis, shared drive, network shares - becoming an unmaintainable hydra. 
+
+But you want it all in one place, because there all is became the code you have to mother. 
+
+In this presentation I'll go through some elements of code, not The Code itself. Share some ideas what can be done with requirements, documentation, check-lists, infrastructure - to keep it all in a single place, maintainable and accessible by all the stakeholders - in a way they like it. 
+
+== Links 
+
+* Swagger: http://swagger.io/
+* Asciidoctor: http://asciidoctor.org/
+
+* Spock: http://spockframework.org/
+* Spock reports: https://github.com/renatoathaydes/spock-reports
