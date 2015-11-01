@@ -760,37 +760,22 @@ Success - all the data are stored in git and versioned and maintained
 
 == Cucumber BDD style
 
-=== Define the scenario
+=== Define the scenario / feature
 
 [source, txt]
 --
-Feature: Words translation
+Feature: Try word translation
 
-  Scenario: Translate the word house
-    Given The word house
-    When I do the translation
-    Then the result is dom
---
+  Scenario Outline: Translate some words
+    Given I have a word <word>
+    When I try to translate
+    Then I get <size> translations
+    And First translation is <firstTranslation>
+    Examples:
+      | word        | size | firstTranslation   |
+      | "domek"     | 24   | "lodge"            |
+      | "asdfghj"   | 0    | null               |
 
-=== Do the implementation
-
-[source, java]
---
-@Given("^The word (\\w+)$")
-public void should_translate_the_word(Sting word) {
-    get().uri(root, "translate/" + word);
-}
-
-@When("^I do the translation$")
-public void execute_transation() {
-    response = request.execute();
-}
-
-@Then("^the result is (.*)$")
-public void validate_the_translation(String expectedWord) {
-    String word = response.body();
-    assertThat(word, is(expectedWord));
-}
 --
 
 [NOTE.speaker]
@@ -799,6 +784,32 @@ public void validate_the_translation(String expectedWord) {
 ** Noone / ever 
 * So we do loads of additional boilerplate we need to maintain
 --
+
+=== Do the implementation
+
+[source%nowrap, java]
+--
+Given("^I have a word \"([^\"]*)\"$", (String word) -> {
+    word_to_translate = word;
+});
+
+When("^I try to translate$", () -> {
+    Response response = RestAssured.given().get(host + "/translate/" + word_to_translate);
+    translations = JsonPath.from(response.asString()).get("englishWord");
+});
+
+Then("^I get (\\d+) translations$", (Integer size) -> {
+    assertThat(translations, hasSize(size));
+});
+
+And("^First translation is \"([^\"]*)\"$", (String firstresult) -> {
+    assertThat(translations.get(0), is(equalTo(firstresult)));
+});
+--
+
+=== Share results
+
+image::cucumber-reports.png[]
 
 == Spock
 
