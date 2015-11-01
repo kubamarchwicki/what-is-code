@@ -507,8 +507,6 @@ This is something *Radek Simko* covered in details yesterday, so I'll just it th
 * And thus I'll be able show some code
 --
 
-// TODO: do it better, with vagrant + ansible
-//// 
 
 == With containers
 
@@ -661,7 +659,6 @@ Enviroment from template:: Generate images for multiple platforms at the same ti
 ** Jenkins call it with a service name
 *** It deploys application
 --
-////
 
 == Operations scope
 
