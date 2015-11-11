@@ -187,11 +187,16 @@ An example information flow might look like - this is how it looks in one of a p
 We regard it as solution architecture. *The solution architecture*
 --
 
+[%notitle, data-background-image=images/documentation-flow.png, data-background-size=cover]
+== How your documentation flow might look like (2)
+
+////
 [data-background="#fff"]
 == IEEE 1471
 
 .Just writing a wrong thing?
 image::ieee1471.jpg[caption=""]
+////
 
 [NOTE.speaker]
 --
@@ -222,6 +227,10 @@ image::ieee1471.jpg[caption=""]
 * ditch the docs
 ** make documentation accessible by developers, let them take ownership
 * it starts with model, but quickly it's code that matters
+** principls
+** mantras
+** decisions
+* It's all that matters
 --
 
 [%notitle, data-background-image=images/arch-vs-reality-ebCommunication-cut.png, data-background="#fff", data-background-size=cover]
@@ -337,7 +346,9 @@ image::swagger-example.png[]
 
 [NOTE.speaker]
 --
-The output is fully interactive and it let me actually browser the API
+* The output is fully interactive and it let me actually browser the API
+* From there you can generate a PDF dcumentation with *swagger2markup*
+** get Asciidoc *FTW*!
 --
 
 == Asciidoc
@@ -484,9 +495,9 @@ That's expectation. You cannot adhere to it with
 
 == Set some principles
 
-* Every delivery step is a *Jenkins* job
-* Deployments are *roll-forward* only
-* *Hands off* policy - not logging to servers
+* *Jenkins* job for everything
+* Never look back - deployments are *roll-forward* only
+* *Hands off* the servers - _no ssh_
 
 == Find the best tool for the job
 
@@ -593,6 +604,7 @@ Enviroment from template:: Generate images for multiple platforms at the same ti
 * Guess what - it's written in Golang
 --
 
+////
 === Packer templates
 
 * *builders* - configure the image
@@ -646,18 +658,13 @@ Enviroment from template:: Generate images for multiple platforms at the same ti
   }
 }
 ....
+////
 
 === Use your fav provisioning tool
 
 [NOTE.speaker]
 --
 * No holy war between ansible, puppet or chef
-* Our workflow
-** Pakcer install additional service fr provisioning
-** Jenkins calls it (webservice) with env type parameter
-*** It install java / vertx environment
-** Jenkins call it with a service name
-*** It deploys application
 --
 
 == Operations scope
@@ -873,8 +880,6 @@ image::spock-reports.png[]
 
 [NOTE.speaker]
 --
-This is little something Marcin Grzejszczak told me yesterday - report all the things
-
 And you get HTML out of it
 --
 
@@ -896,6 +901,68 @@ They don't need to
 * spin it with Arquillian Cube
 * Write the test like a boss
 --
+
+== Arquillian with Cube
+
+Arquillian:: handles all the plumbing of container management, deployment and framework initialization so you can focus on the task at hand, *writing your tests*
+
+Arquillian Cube:: an extension that can be used to *manage Docker containers* from Arquillian.
+
+=== Docker compose
+
+[source, yml]
+----
+app:
+  image: kubamarchwicki/spring-boot-example
+  ports:
+   - "18080:8080"
+  links:
+   - mysql
+mysql:
+  image: tutum/mysql
+  ports:  
+   - "13306:3306" 
+  environment:
+    - MYSQL_USER=admin
+    - MYSQL_PASS=admin
+    - ON_CREATE_DB=test
+----
+
+=== Run it with Arquillian
+
+[source%nowrap, xml]
+----
+<extension qualifier="docker">
+    <property name="serverVersion">1.12</property>
+    <property name="definitionFormat">COMPOSE</property>
+    <property name="dockerContainersFile">
+      src/test/resources/docker-compose.yml
+    </property>
+</extension>
+
+<container qualifier="containerless" default="true">
+    <configuration>
+        <property name="containerlessDocker">app</property>
+        <property name="embeddedPort">18080</property>
+    </configuration>
+</container>
+----
+
+=== Write your tests
+
+[source, java]
+----
+@Test
+@RunAsClient
+public void shouldReturnMessage(@ArquillianResource URL base) { //<1>
+    String json = get(new URL(base, "translate/domek")).asString();
+    List<String> translations = from(json).get("englishWord");
+
+    assertThat(translations, hasSize(24));
+    assertThat(from(json).get("[1].englishWord").toString(), is("chateau"));
+}
+----
+<1> Arquillian passes the runtime configuration
 
 == So it's all covered
 
