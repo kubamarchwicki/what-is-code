@@ -8,21 +8,20 @@
     <packaging>jar</packaging>
 
     <properties>
-        <version.arquillian_universe>1.0.0.Alpha1</version.arquillian_universe>
+        <version.arquillian_core>1.1.10.Final</version.arquillian_core>
         <version.arquillian_cube>1.0.0.Final-SNAPSHOT</version.arquillian_cube>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <jboss.snapshots.repo.url>https://repository.jboss.org/nexus/content/repositories/snapshots/</jboss.snapshots.repo.url>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.arquillian</groupId>
-                <artifactId>arquillian-universe</artifactId>
-                <version>${version.arquillian_universe}</version>
-                <scope>import</scope>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${version.arquillian_core}</version>
                 <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -46,16 +45,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.arquillian.cube</groupId>
-            <artifactId>arquillian-cube-containerless</artifactId>
-            <version>${version.arquillian_cube}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.arquillian.universe</groupId>
+            <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-standalone</artifactId>
             <scope>test</scope>
-            <type>pom</type>
         </dependency>
 
         <dependency>
@@ -71,6 +63,7 @@
         </dependency>
     </dependencies>
 
+    <!--
     <build>
         <plugins>
             <plugin>
@@ -87,15 +80,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>jboss-snapshots</id>
-            <name>JBoss Snapshots Repository</name>
-            <url>${jboss.snapshots.repo.url}</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+    -->
 </project>

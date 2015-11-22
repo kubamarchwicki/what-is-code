@@ -1,17 +1,16 @@
 package com.example;
 
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.arquillian.cube.CubeController;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.shrinkwrap.api.GenericArchive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,14 +33,16 @@ public class TranslationTest {
 //    Container
 //    * runs tests with container, managed lifecycle of container including deployment
 //    * you can still use Graphene without managing lifecycle - just do not provide @Deployment in your test case
+    
+    @ArquillianResource
+    private CubeController cc;
 
-    @Deployment(testable = false)
-    public static GenericArchive createDeployment() {
-        return ShrinkWrap.create(GenericArchive.class, "app.tar");
+    @Test @InSequence(0)
+    public void shouldBeAbleToInjectController() {
+        Assert.assertNotNull(cc);
     }
 
-    @Test
-    @RunAsClient
+    @Test @InSequence(1)
     public void shouldReturnMessage() throws IOException, InterruptedException {
         log.log(Level.INFO, "Foo");
 

@@ -2,19 +2,35 @@
 <arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns="http://jboss.org/schema/arquillian"
             xsi:schemaLocation="http://jboss.org/schema/arquillian
-  http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+    http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
     <extension qualifier="docker">
+        <property name="autoStartContainers">app, mysql</property>
         <property name="serverVersion">1.12</property>
+        <property name="serverUri">http://localhost:2375</property>
         <property name="definitionFormat">COMPOSE</property>
         <property name="dockerContainersFile">src/test/resources/docker-compose.yml</property>
+        <!-- CUBE config works fine due to waiting strategies
+             With compose - the containers don't get started fast enough -->
+        <!--
+        <property name="dockerContainers">
+            app:
+                image: kubamarchwicki/spring-boot-example
+                portBindings: [18080->8080/tcp]
+                await:
+                    strategy: sleeping
+                    sleepTime: 20s
+                links:
+                    - mysql:mysql
+            mysql:
+                image: tutum/mysql
+                portBindings: [13306->3306/tcp]
+                await:
+                    strategy: polling
+                    sleepPollingTime: 2s
+                env: [MYSQL_USER=admin, MYSQL_PASS=admin, ON_CREATE_DB=test]
+        </property>
+        -->
     </extension>
-
-    <container qualifier="containerless" default="true">
-        <configuration>
-            <property name="containerlessDocker">app</property>
-            <property name="embeddedPort">18080</property>
-        </configuration>
-    </container>
 
 </arquillian>
